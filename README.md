@@ -6,7 +6,7 @@
 
 **NeuroBitMonitor** is a real-time Brain-Computer Interface (BCI) dashboard built with **C# WPF**. It connects to NeuroSky MindWave headsets via the ThinkGear Connector, allowing you to visualize raw EEG waves, monitor attention states, and record data for scientific analysis.
 
-![Application Screenshot](assets/screenshot.png)
+![Application Screenshot]([https://github.com/eegG0D/NeuroBitMonitor/blob/main/Capture.PNG])
 *(Note: Add a screenshot of your app here)*
 
 ## ✨ Features
