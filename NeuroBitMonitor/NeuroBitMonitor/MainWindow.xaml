@@ -1,0 +1,127 @@
+﻿<Window x:Class="NeuroBitMonitor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:NeuroBitMonitor.ViewModels"
+        Title="NeuroBit Monitor v4.0 - MindWave Mobile 2" Height="800" Width="1200"
+        Background="#121212" Foreground="#E0E0E0">
+
+    <Window.DataContext>
+        <vm:MainViewModel />
+    </Window.DataContext>
+
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/>
+            <!-- Sidebar -->
+            <ColumnDefinition Width="*"/>
+            <!-- Main Vis -->
+            <ColumnDefinition Width="250"/>
+            <!-- Spectral Analysis -->
+        </Grid.ColumnDefinitions>
+
+        <!-- LEFT SIDEBAR -->
+        <StackPanel Grid.Column="0" Margin="0,0,10,0">
+            <TextBlock Text="CONNECTION" FontWeight="Bold" Foreground="#007ACC"/>
+            <Border Background="#1E1E1E" Padding="10" CornerRadius="5" Margin="0,5,0,20">
+                <StackPanel>
+                    <TextBlock Text="{Binding ConnectionStatus}" FontWeight="Bold" Margin="0,0,0,5"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Button Content="Connect" Command="{Binding ConnectCommand}" Grid.Column="0" Margin="0,0,2,0"/>
+                        <Button Content="Disconnect" Command="{Binding DisconnectCommand}" Grid.Column="1" Margin="2,0,0,0"/>
+                    </Grid>
+                    <TextBlock Text="Signal Quality (0=Good):" Margin="0,10,0,0"/>
+                    <ProgressBar Value="{Binding SignalQuality}" Maximum="200" Height="5" Background="#333" Foreground="Red"/>
+                </StackPanel>
+            </Border>
+
+            <TextBlock Text="eSENSE METRICS" FontWeight="Bold" Foreground="#007ACC"/>
+            <Border Background="#1E1E1E" Padding="10" CornerRadius="5" Margin="0,5,0,20">
+                <StackPanel>
+                    <TextBlock Text="Attention (Focus)"/>
+                    <ProgressBar Value="{Binding Attention}" Maximum="100" Height="20" Margin="0,2,0,10" Foreground="Cyan"/>
+
+                    <TextBlock Text="Meditation (Relax)"/>
+                    <ProgressBar Value="{Binding Meditation}" Maximum="100" Height="20" Margin="0,2,0,10" Foreground="Magenta"/>
+
+                    <TextBlock Text="Blink Strength"/>
+                    <ProgressBar Value="{Binding BlinkStrength}" Maximum="255" Height="10" Margin="0,2,0,5" Foreground="Yellow"/>
+                </StackPanel>
+            </Border>
+
+            <TextBlock Text="CONTROLS (20+ Options)" FontWeight="Bold" Foreground="#007ACC"/>
+            <Border Background="#1E1E1E" Padding="10" CornerRadius="5">
+                <StackPanel>
+                    <CheckBox Content="Enable Raw Wave" IsChecked="{Binding IsRawEnabled}" Foreground="White" Margin="0,2"/>
+                    <CheckBox Content="Enable Blink Detect" IsChecked="{Binding IsBlinkEnabled}" Foreground="White" Margin="0,2"/>
+                    <CheckBox Content="Record CSV Log" IsChecked="{Binding IsLoggingEnabled}" Command="{Binding ToggleLogCommand}" Foreground="White" Margin="0,2"/>
+
+                    <TextBlock Text="Alert Thresholds:" Margin="0,10,0,0" FontWeight="Bold"/>
+                    <TextBlock Text="Att > 80 Trigger"/>
+                    <Slider Minimum="0" Maximum="100" Value="{Binding ThresholdAttention}"/>
+
+                    <TextBlock Text="Med > 80 Trigger"/>
+                    <Slider Minimum="0" Maximum="100" Value="{Binding ThresholdMeditation}"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+
+        <!-- CENTER MAIN -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="200"/>
+            </Grid.RowDefinitions>
+
+            <!-- Raw Wave Graph -->
+            <Border Grid.Row="0" Background="#000" BorderBrush="#333" BorderThickness="1" CornerRadius="5" ClipToBounds="True">
+                <Grid>
+                    <TextBlock Text="RAW EEG (512Hz)" Foreground="Lime" Margin="10"/>
+                    <Polyline Points="{Binding RawWavePoints}" Stroke="Lime" StrokeThickness="1.5"/>
+                </Grid>
+            </Border>
+
+            <!-- Log Output -->
+            <Border Grid.Row="1" Background="#1E1E1E" Margin="0,10,0,0" CornerRadius="5" Padding="5">
+                <ScrollViewer>
+                    <TextBlock Text="{Binding StatusLogText}" FontFamily="Consolas" FontSize="11" Foreground="Gray"/>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+
+        <!-- RIGHT SIDEBAR (Spectral Analysis) -->
+        <StackPanel Grid.Column="2" Margin="10,0,0,0">
+            <TextBlock Text="SPECTRAL POWER" FontWeight="Bold" Foreground="#007ACC"/>
+            <Border Background="#1E1E1E" Padding="10" CornerRadius="5" Margin="0,5,0,0">
+                <StackPanel>
+                    <TextBlock Text="Delta (0.5 - 2.75Hz)"/>
+                    <ProgressBar Value="{Binding Delta}" Maximum="2000000" Height="10" Foreground="Red" Margin="0,0,0,10"/>
+
+                    <TextBlock Text="Theta (3.5 - 6.75Hz)"/>
+                    <ProgressBar Value="{Binding Theta}" Maximum="2000000" Height="10" Foreground="Orange" Margin="0,0,0,10"/>
+
+                    <TextBlock Text="Low Alpha (7.5 - 9.25Hz)"/>
+                    <ProgressBar Value="{Binding LowAlpha}" Maximum="50000" Height="10" Foreground="Yellow" Margin="0,0,0,10"/>
+
+                    <TextBlock Text="High Alpha (10 - 11.75Hz)"/>
+                    <ProgressBar Value="{Binding HighAlpha}" Maximum="50000" Height="10" Foreground="Lime" Margin="0,0,0,10"/>
+
+                    <TextBlock Text="Low Beta (13 - 16.75Hz)"/>
+                    <ProgressBar Value="{Binding LowBeta}" Maximum="50000" Height="10" Foreground="Cyan" Margin="0,0,0,10"/>
+
+                    <TextBlock Text="High Beta (18 - 29.75Hz)"/>
+                    <ProgressBar Value="{Binding HighBeta}" Maximum="50000" Height="10" Foreground="Blue" Margin="0,0,0,10"/>
+
+                    <TextBlock Text="Low Gamma (31 - 39.75Hz)"/>
+                    <ProgressBar Value="{Binding LowGamma}" Maximum="20000" Height="10" Foreground="Purple" Margin="0,0,0,10"/>
+
+                    <TextBlock Text="High Gamma (41 - 49.75Hz)"/>
+                    <ProgressBar Value="{Binding HighGamma}" Maximum="20000" Height="10" Foreground="Violet" Margin="0,0,0,10"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </Grid>
+</Window>
